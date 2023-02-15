@@ -67,6 +67,10 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": false
             }
           }
         },
@@ -78,6 +82,9 @@
           "configurations": {
             "production": {
               "browserTarget": "geonature:build:production"
+            },
+            "development": {
+              "browserTarget": "geonature:build:development"
             }
           }
         },
