@@ -69,15 +69,21 @@
               ]
             },
             "development": {
+              "buildOptimizer": false,
               "optimization": false,
-              "sourceMap": false
-            }
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
+            "defaultConfiguration": "production"
           }
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "geonature:build"
+            "browserTarget": "geonature:build",
+             "host": "127.0.0.1"
           },
           "configurations": {
             "production": {
@@ -86,7 +92,8 @@
             "development": {
               "browserTarget": "geonature:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
