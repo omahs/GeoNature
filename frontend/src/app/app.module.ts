@@ -57,6 +57,7 @@ import { UserDataService } from "./userModule/services/user-data.service";
 
 // Config
 import { APP_CONFIG_TOKEN, AppConfig } from '@geonature_config/app.config';
+import { LocaleProvider } from './locale.provider';
 
 
 export function get_modules(moduleService: ModuleService) {
@@ -83,10 +84,10 @@ export function get_modules(moduleService: ModuleService) {
       loader: {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,
-        deps: [HttpClient],
-      },
+        deps: [HttpClient]
+      }
     }),
-    LoginModule,
+    LoginModule
   ],
   declarations: [
     AppComponent,
@@ -113,8 +114,9 @@ export function get_modules(moduleService: ModuleService) {
     { provide: HTTP_INTERCEPTORS, useClass: MyCustomInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: UnauthorizedInterceptor, multi: true },
     // { provide: APP_INITIALIZER, useFactory: get_cruved, deps: [CruvedStoreService], multi: true},
-     { provide: APP_INITIALIZER, useFactory: get_modules, deps: [ModuleService], multi: true},
+    { provide: APP_INITIALIZER, useFactory: get_modules, deps: [ModuleService], multi: true },
+    LocaleProvider,
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
