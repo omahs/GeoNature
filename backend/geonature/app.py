@@ -159,7 +159,12 @@ def create_app(with_external_mods=True):
     @app.before_request
     def load_current_user():
         try:
-            g.current_user = user_from_token(request.cookies["token"]).role
+            bearer = request.headers.get("Authorization", default=None, type=str)
+            if bearer:
+                jwt = bearer.replace("Bearer ", "")
+            else:
+                jwt = request.cookies["token"]
+            g.current_user = user_from_token(jwt).role
         except (KeyError, UnreadableAccessRightsError, AccessRightsExpiredError):
             g.current_user = None
         g._permissions_by_user = {}

@@ -7,6 +7,7 @@ import { CookieService } from 'ng2-cookies';
 import 'rxjs/add/operator/delay';
 import { forkJoin } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import * as moment from "moment";
 import { CruvedStoreService } from '@geonature_common/service/cruved-store.service';
 import { ModuleService } from '../../services/module.service';
 import { RoutingService } from '@geonature/routing/routing.service';
@@ -55,12 +56,13 @@ export class AuthService {
     return JSON.parse(currentUser);
   }
 
-  setToken(token, expireDate) {
-    this._cookie.set('token', token, expireDate);
-  }
 
   getToken() {
+    const hasToken = this._cookie.check("token")
+    console.log(hasToken);
+    
     const token = this._cookie.get('token');
+    
     const response = token.length === 0 ? null : token;
     return response;
   }
@@ -74,6 +76,7 @@ export class AuthService {
   }
 
   manageUser(data): any {
+    this.setSession(data);
     const userForFront = {
       user_login: data.user.identifiant,
       prenom_role: data.user.prenom_role,
@@ -84,6 +87,11 @@ export class AuthService {
     };
     this.setCurrentUser(userForFront);
     this.loginError = false;
+  }
+
+  setSession(authResult) {
+      localStorage.setItem('gn_id_token', authResult.idToken);
+      localStorage.setItem("expires_at", authResult.expires);
   }
 
   signinUser(user: any) {
@@ -126,6 +134,20 @@ export class AuthService {
         .replace(/=.*/, '=;expires=' + new Date().toUTCString() + ';path=/');
     });
   }
+
+    isLoggedIn() {
+      return moment().utc().isBefore(this.getExpiration());
+    }
+
+    isLoggedOut() {
+        return !this.isLoggedIn();
+    }
+
+  getExpiration() {
+
+      const expiration = localStorage.getItem("expires_at");
+      return moment(expiration).utc()
+  }   
 
   logout() {
     this.deleteAllCookies();
