@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     const moduleService = this._injector.get(ModuleService);
     const configService = this._injector.get(ConfigService);
     const routingService = this._injector.get(RoutingService);
-    
+
     if (!authService.isLoggedIn()) {
       if (
         route.queryParams.access &&
