@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   setSession(authResult) {
-    localStorage.setItem('gn_id_token', authResult.idToken);
+    localStorage.setItem('gn_id_token', authResult.token);
     localStorage.setItem('expires_at', authResult.expires);
   }
 
