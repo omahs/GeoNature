@@ -212,6 +212,16 @@ def create_app(with_external_mods=True):
         app.register_blueprint(blueprint, url_prefix=url_prefix)
 
     with app.app_context():
+        # taxhub
+        from apptax import taxhub_routes
+        from apptax.admin.admin import taxhub_admin_addview
+
+        taxhub_admin_addview(app, admin, "TaxHub")
+
+        for blueprint_path, url_prefix in taxhub_routes:
+            module_name, blueprint_name = blueprint_path.split(":")
+            blueprint = getattr(import_module(module_name), blueprint_name)
+            app.register_blueprint(blueprint, url_prefix="/taxhub" + url_prefix)
         # register errors handlers
         import geonature.core.errors
 
