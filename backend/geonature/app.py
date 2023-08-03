@@ -214,9 +214,6 @@ def create_app(with_external_mods=True):
     with app.app_context():
         # taxhub
         from apptax import taxhub_routes
-        from apptax.admin.admin import taxhub_admin_addview
-
-        taxhub_admin_addview(app, admin, "TaxHub")
 
         for blueprint_path, url_prefix in taxhub_routes:
             module_name, blueprint_name = blueprint_path.split(":")

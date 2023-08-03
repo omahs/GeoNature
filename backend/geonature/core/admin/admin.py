@@ -1,3 +1,5 @@
+import os
+
 from flask import g
 from werkzeug.exceptions import Unauthorized
 from flask_admin import Admin, AdminIndexView, expose
@@ -28,6 +30,16 @@ from pypnnomenclature.admin import (
     TNomenclaturesAdmin,
 )
 
+from apptax.admin.admin import adresses
+from apptax.taxonomie.models import Taxref, BibListes, TMedias, BibAttributs, BibThemes
+
+from geonature.core.taxonomie.admin import (
+    CruvedProtectedBibListesView,
+    CruvedProtectedTaxrefView,
+    CruvedProtectedTMediasView,
+    CruvedProtectedBibAttributsView,
+    CruvedProtectedBibThemes,
+)
 from .utils import CruvedProtectedMixin
 
 
@@ -149,6 +161,58 @@ admin.add_view(
         db.session,
         name="Modules",
         category="Autres",
+    )
+)
+
+static_folder = os.path.join(adresses.root_path, "static")
+
+admin.add_view(
+    CruvedProtectedTaxrefView(
+        Taxref,
+        db.session,
+        name="Taxref",
+        endpoint="taxons",
+        category="TaxHub",
+        static_folder=static_folder,
+    )
+)
+admin.add_view(
+    CruvedProtectedBibListesView(
+        BibListes,
+        db.session,
+        name="Listes",
+        category="TaxHub",
+        static_folder=static_folder,
+    )
+)
+
+
+admin.add_view(
+    CruvedProtectedBibAttributsView(
+        BibAttributs,
+        db.session,
+        name="Attributs",
+        category="TaxHub",
+        static_folder=static_folder,
+    )
+)
+admin.add_view(
+    CruvedProtectedBibThemes(
+        BibThemes,
+        db.session,
+        name="Thèmes",
+        category="TaxHub",
+        static_folder=static_folder,
+    )
+)
+
+admin.add_view(
+    CruvedProtectedTMediasView(
+        TMedias,
+        db.session,
+        name="Médias",
+        category="TaxHub",
+        static_folder=static_folder,
     )
 )
 
