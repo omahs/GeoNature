@@ -49,6 +49,7 @@ ENV NGINX_PORT 80
 ENV NGINX_HOST localhost
 ENV NGINX_LOCATION /
 
+COPY ./install/assets/docker_frontend_healthcheck.sh ./docker_healthcheck.sh
 COPY ./frontend/50-set-api-endpoint.sh /docker-entrypoint.d/
 
 COPY ./frontend/nginx.conf /etc/nginx/templates/default.conf.template

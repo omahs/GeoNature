@@ -1,11 +1,10 @@
 # syntax=docker/dockerfile:1.2
 
-FROM python:3.9-bullseye AS build
+FROM python:3.10-bullseye AS build
 
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN --mount=type=cache,target=/root/.cache \
     pip install --upgrade pip setuptools wheel
-
 
 FROM build AS build-habref
 WORKDIR /build/
@@ -107,19 +106,28 @@ RUN --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
 
-FROM python:3.9-bullseye AS wheels-light
+FROM python:3.10-bullseye AS wheels-light
+
+# raster2psql
+
+RUN apt-get update && apt-get upgrade -y && apt-get -y install wget lsb-release gnupg
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+RUN apt-get update && apt-get install -y postgresql-client postgis
 
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN --mount=type=cache,target=/root/.cache \
     pip install --upgrade pip setuptools wheel
 
 WORKDIR /dist
-ENV GEONATURE_STATIC_PATH=/dist/static/
+ENV GEONATURE_STATIC_FOLDER=/dist/static/
 COPY /backend/static/ ./static/
 COPY --from=node /dist/node_modules/ ./static/node_modules/
-ENV GEONATURE_CUSTOM_STATIC_PATH=/dist/custom/
+ENV GEONATURE_CUSTOM_STATIC_FOLDER=/dist/custom/
 RUN mkdir custom
-ENV GEONATURE_MEDIA_PATH=/dist/media/
+ENV DATA_DIRECTORY=/dist/data
+RUN mkdir data
+ENV GEONATURE_MEDIA_FOLDER=/dist/media/
 RUN mkdir -p media/attachments
 
 WORKDIR /dist/geonature
@@ -141,6 +149,7 @@ COPY --from=build-geonature /build/dist/*.whl .
 
 COPY --chmod=755 /install/03b_populate_db.sh /populate_db.sh
 COPY --chmod=755 /install/assets/docker_startup.sh /startup.sh
+COPY --chmod=755 /install/assets/docker_backend_healthcheck.sh /docker_healthcheck.sh
 
 ENV GEONATURE_CONFIG_FILE ""
 

@@ -11,6 +11,10 @@ set -o pipefail
 set -o nounset
 
 
+# test d'écriture dans le dossier 'media' de geonature
+touch /dist/media/test_write_in_geonature_media_directory
+rm /dist/media/test_write_in_geonature_media_directory
+
 # creer les tables et peupler la base
 if [ "${GEONATURE_POPULATE_DB}" = true ]; then
     . /populate_db.sh
@@ -31,6 +35,9 @@ if [ "${GEONATURE_POPULATE_DB}" = true ]; then
             geonature db upgrade taxhub-admin@head
         fi
     fi
+
+    geonature upgrade-modules-db -x local-srid=$srid_local
+
 fi
 
 # lancement de l'application
@@ -38,4 +45,10 @@ gunicorn "geonature:create_app()" \
     --name=geonature \
     --workers=2 \
     --threads=2 \
-    --bind=0.0.0.0:8000
+    --bind=0.0.0.0:8000 \
+    --reload \
+    --access-logfile=- \
+    --error-logfile=- \
+    --log-level=info \
+    --reload --reload-extra-file="${GEONATURE_CONFIG_FILE}"
+    # --capture-output \
