@@ -219,6 +219,11 @@ def create_app(with_external_mods=True):
             module_name, blueprint_name = blueprint_path.split(":")
             blueprint = getattr(import_module(module_name), blueprint_name)
             app.register_blueprint(blueprint, url_prefix="/taxhub" + url_prefix)
+        # register taxhub admin view which need app context
+        from geonature.core.taxonomie.admin import load_admin_views
+
+        load_admin_views(app, admin)
+
         # register errors handlers
         import geonature.core.errors
 
