@@ -107,7 +107,7 @@ fi
 
 if [ ! -d "${newdir}/media/taxhub" ];then
 mkdir "${newdir}/backend/media/taxhub"
-taxhub_dir="$(dirname -- "${newdir}")/TaxHub"
+taxhub_dir="$(dirname -- "${newdir}")/taxhub"
 mv "${taxhub_dir}/static/medias/" "${newdir}/backend/media/taxhub"
 
 fi
