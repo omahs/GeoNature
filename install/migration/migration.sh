@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # before 2.13
-
 if [ -f "/etc/systemd/system/taxhub.service" ]; then
     sudo systemctl stop taxhub 
     sudo systemctl disable taxhub
@@ -102,6 +101,15 @@ if [ ! -f "${newdir}/custom/css/metadata_pdf_custom.css" ] && [ -f "${olddir}/ba
     && ! cmp -s "${olddir}/backend/static/css/custom.css" "${newdir}/backend/static/css/metadata_pdf_custom.css"; then
   mkdir -p "${newdir}/custom/css/"
   cp "${olddir}/backend/static/css/custom.css" "${newdir}/custom/css/metadata_pdf_custom.css"
+fi
+
+# before 2.13 - Rappatriement des médias TaxHub
+
+if [ ! -d "${newdir}/media/taxhub" ];then
+mkdir "${newdir}/backend/media/taxhub"
+taxhub_dir="$(dirname -- "${newdir}")/TaxHub"
+mv "${taxhub_dir}/static/medias/" "${newdir}/backend/media/taxhub"
+
 fi
 
 
