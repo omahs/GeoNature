@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-# before 2.13
-if [ -f "/etc/systemd/system/taxhub.service" ]; then
-    sudo systemctl stop taxhub 
-    sudo systemctl disable taxhub
-    sudo rm /etc/systemd/system/taxhub
-    sudo systemctl daemon-reload
-    sudo systemctl reset-failed
-fi
 
 
 SERVICES=("geonature" "geonature-worker" "usershub")
@@ -269,5 +261,26 @@ for service in ${SERVICES[@]}; do
 done
 
 deactivate
+
+
+# before 2.13
+if [ -f "/etc/systemd/system/taxhub.service" ]; then
+    sudo systemctl stop taxhub 
+    sudo systemctl disable taxhub
+    sudo rm /etc/systemd/system/taxhub
+    sudo systemctl daemon-reload
+    sudo systemctl reset-failed
+fi
+
+if [ -f "/etc/apache2/sites-available/taxhub.conf" ]; then
+    rm /etc/apache2/sites-available/taxhub.conf
+fi
+
+if [ -f "/etc/apache2/sites-available/taxhub-le-ssl.conf" ]; then
+    rm /etc/apache2/sites-available/taxhub-le-ssl.conf
+fi
+
+sudo apachectl restart
+
 
 echo "Migration terminée"
