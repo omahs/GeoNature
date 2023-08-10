@@ -15,6 +15,7 @@ else:
 from flask import Flask, g, request, current_app, send_from_directory
 from flask.json.provider import DefaultJSONProvider
 from flask_mail import Message
+from flask_babelex import Babel
 from flask_cors import CORS
 from flask_sqlalchemy import before_models_committed
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -182,6 +183,13 @@ def create_app(with_external_mods=True):
                 )
 
     admin.init_app(app)
+
+    # babel
+    babel = Babel(app)
+
+    @babel.localeselector
+    def get_locale():
+        return request.accept_languages.best_match(["de", "fr", "en"])
 
     # Enable serving of media files
     app.add_url_rule(
