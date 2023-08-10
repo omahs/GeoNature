@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-SERVICES=("geonature" "geonature-worker" "taxhub" "usershub")
+# before 2.13
+
+if [ -f "/etc/systemd/system/taxhub.service" ]; then
+    sudo systemctl stop taxhub 
+    sudo systemctl disable taxhub
+    sudo rm /etc/systemd/system/taxhub
+    sudo systemctl daemon-reload
+    sudo systemctl reset-failed
+fi
+
+
+SERVICES=("geonature" "geonature-worker" "usershub")
 
 newdir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /dev/null && pwd )"
 if (($# > 0)); then
