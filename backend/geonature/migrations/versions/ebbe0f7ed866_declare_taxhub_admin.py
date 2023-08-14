@@ -20,8 +20,8 @@ def upgrade():
     op.execute(
         """
         INSERT INTO gn_commons.t_modules
-        (module_code, module_label, module_picto, module_desc, module_external_url, module_target, active_frontend, active_backend)
-        VALUES('TAXHUB', 'Taxhub', 'fa-leaf', 'Module TaxHin',  'test', '_blank', false, false);
+        (module_code, module_label, module_picto, module_desc, module_target, active_frontend, active_backend)
+        VALUES('TAXHUB', 'Taxhub', 'fa-leaf', 'Module TaxHub', '_blank', false, false);
 
         INSERT INTO gn_permissions.t_objects
         (code_object, description_object)
