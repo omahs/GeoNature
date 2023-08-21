@@ -113,7 +113,7 @@ FROM python:3.10-bullseye AS wheels-light
 RUN apt-get update && apt-get upgrade -y && apt-get -y install wget lsb-release gnupg
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-RUN apt-get update && apt-get install -y postgresql-client postgis
+RUN apt-get update && apt-get install -y postgresql-client
 
 ENV PIP_ROOT_USER_ACTION=ignore
 RUN --mount=type=cache,target=/root/.cache \
